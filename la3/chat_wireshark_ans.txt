@@ -1,0 +1,17 @@
+1.3 packets are sent between the client and the chat server on a new client connects. The first packet to the server is a SYN packet, the second packet is a [SYN, ACK] and the third is an [ACK]. This is the three way handshake
+
+2. RTT for the SYN-ACK packet was .0002168 seconds. Found by taking the time for the next packet([ACK] from client and subtracting the [ACK,SYNK] packet.
+
+3. 4 packets are exchanged when a client sends a chat to another client. The data gets sent to the client who then forwards it to the second client. Then the second client returns and ACK to the server which gets forwarded to the first client. The packets are
+CHATSENDER -> SERVER 		[PSH,ACK]
+SERVER -> CHATRECIPIENT [PSH,ACK]
+CHATRECIPIENT -> SERVER [ACK]
+SERVER -> CHATSENDER		[ACK]
+
+4 packets are also sent when a user logs out. In the same process as above with:
+USER -> SERVER  [PSH,ACK]   <--- User sending logout request
+SERVER -> USER	[FIN,ACK]   <--- Server sending FIN signal to user
+USER -> SERVER	[FIN,ACK]   <--- User sending FIN signal to server
+SERVER -> USER	[ACK]				<--- Server sending ACK of FIN signal
+
+4. 2 packets are sent when a client tries to connect but the server is not up. One [SYN] request to the port, and a [RST,ACK] reset packet.
